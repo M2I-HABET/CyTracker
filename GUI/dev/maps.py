@@ -8,7 +8,6 @@
 #############################################################
 
 import urllib.request
-from io import StringIO
 from tkinter import *
 from tkinter.ttk import *
 

@@ -13,7 +13,7 @@ The author has absolutely no clue what the code in this project does.
 It might just work or not, there is no third option.
 
 
-##            GOOD LUCK WITH THAT PUBLIC LICENSE
+## GOOD LUCK WITH THAT PUBLIC LICENSE
 ## TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION, AND MODIFICATION
 
   0. You just DO WHATEVER YOU WANT TO as long as you NEVER LEAVE A

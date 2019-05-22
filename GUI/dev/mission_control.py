@@ -15,7 +15,6 @@ import maps as maps
 import time
 import threading
 import urllib.request
-from io import StringIO
 
 
 class MC_Tab():
