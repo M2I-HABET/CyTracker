@@ -1,5 +1,6 @@
 # CyTracker
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9ca9d2562be141d781e24083d4d0704e)](https://www.codacy.com/app/Danner36/CyTracker?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=M2I-HABET/CyTracker&amp;utm_campaign=Badge_Grade)
 
 ## GLWT(Good Luck With That) Public License
 ## Copyright (c) Iowa State University
