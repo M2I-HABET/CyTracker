@@ -1,5 +1,7 @@
 # CyTracker
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/9fe3e13872d3468abe4dfc9d6ac9d557)](https://app.codacy.com/app/Danner36/CyTracker?utm_source=github.com&utm_medium=referral&utm_content=M2I-HABET/CyTracker&utm_campaign=Badge_Grade_Dashboard)
+
 
 ## GLWT(Good Luck With That) Public License
 ## Copyright (c) Iowa State University
@@ -13,7 +15,7 @@ The author has absolutely no clue what the code in this project does.
 It might just work or not, there is no third option.
 
 
-##            GOOD LUCK WITH THAT PUBLIC LICENSE
+## GOOD LUCK WITH THAT PUBLIC LICENSE
 ## TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION, AND MODIFICATION
 
   0. You just DO WHATEVER YOU WANT TO as long as you NEVER LEAVE A
