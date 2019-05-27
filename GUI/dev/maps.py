@@ -21,8 +21,15 @@ marker_base = "&markers="
 howe_hall_coords = "42.026695,-93.653384"
 # Used to compare previous map's coordinate to new coordinates to prevent
 # requesting the exact same map from Google's API.
-previous_payload_coords = None
-previous_recovery_coords = None
+previous_payload_coords = "42.026695,-93.653384"
+previous_recovery_coords = "42.026695,-93.653384"
+# Toggled by buttons associated with the image objects.
+payload_zoom = "10"
+payload_maptype = "roadmap"
+recovery_zoom = "10"
+recovery_maptype = "roadmap"
+network_zoom = "10"
+network_maptype = "roadmap"
 
 
 def generate_map(latitude, longitude, node):
@@ -48,12 +55,14 @@ def generate_map(latitude, longitude, node):
             previous_payload_coords = map_center
             # Configures the Url needed to get the correct map from Google.
             url = build_url_payload(map_center)
+            image_name = "gui_maps/payload_map" + "." + "PNG"
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/payload_map" + "." + "PNG")
+            request_API_image(url, image_name)
             # Configures the big picture map. (containing all nodes in 1 map).
             url = build_url_network()
+            image_name = "gui_maps/network_map" + "." + "PNG"
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "PNG")
+            request_API_image(url, image_name)
             # New map has been generated. Replace the current image.
             return True
         # A map with this configuration has already been generated.
@@ -69,18 +78,31 @@ def generate_map(latitude, longitude, node):
             previous_recovery_coords = map_center
             # Configures the Url needed to get the correct map from Google.
             url = build_url_recovery(map_center)
+            image_name = "gui_maps/recovery_map" + "." + "PNG"
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/recovery_map" + "." + "PNG")
+            request_API_image(url, image_name)
             # Configures the big picture map. (containing all nodes in 1 map).
             url = build_url_network()
+            image_name = "gui_maps/network_map" + "." + "PNG"
             # Pulls down the configured Static Maps image from Google.
-            urllib.request.urlretrieve(url, "gui_maps/network_map" + "." + "PNG")
+            request_API_image(url, image_name)
             # New map has been generated. Replace the current image.
             return True
         # A map with this configuration has already been generated.
         # Return false to tell the software to not replace the current image.
         else:
             return False
+
+
+def request_API_image(url, image_name):
+    """
+
+
+    @param url - Constructed url to send to Google's Static Maps.
+    @param image_name - Name (including file type) to save the image as.
+    """
+
+    urllib.request.urlretrieve(url, image_name)
 
 
 def build_url_payload(map_center):
@@ -93,9 +115,9 @@ def build_url_payload(map_center):
     # Builds the url to request a specific image.
     map_url = None
     map_url = url_base + map_center
-    map_url +=  zoom_base + str(9)
+    map_url +=  zoom_base + payload_zoom
     map_url +=  size_base + "500x500"
-    map_url +=  maptype_base + "roadmap"
+    map_url +=  maptype_base + payload_maptype
     map_url +=  marker_base + "color:red%7Clabel:P%7C" + map_center
     map_url +=  google_api_key
     # Returns url.
@@ -112,9 +134,9 @@ def build_url_recovery(map_center):
     # Builds the url to request a specific image.
     map_url = None
     map_url = url_base + map_center
-    map_url +=  zoom_base + str(9)
+    map_url +=  zoom_base + recovery_zoom
     map_url +=  size_base + "500x500"
-    map_url +=  maptype_base + "roadmap"
+    map_url +=  maptype_base + recovery_maptype
     map_url +=  marker_base + "color:green%7Clabel:R%7C" + map_center
     map_url +=  google_api_key
     # Returns url.
@@ -141,9 +163,9 @@ def build_url_network():
     # Builds the url to request a specific image.
     map_url = None
     map_url = url_base + map_center
-    map_url +=  zoom_base + str(9)
+    map_url +=  zoom_base + network_zoom
     map_url +=  size_base + "500x500"
-    map_url +=  maptype_base + "roadmap"
+    map_url +=  maptype_base + network_maptype
     map_url +=  marker_base + "color:green%7Clabel:R%7C" + map_center
     map_url +=  google_api_key
     # Returns url.
@@ -157,8 +179,6 @@ def place_payload(mc_frame):
     @param mc_frame - Reference object that holds the payload_map_image object.
     """
 
-    # Removes old image from GUI. Prevents stacking which may lead to crashing.
-    mc_frame.payload_map_image.grid_forget()
     # Pulls Static Maps image into python.
     temp_image = PhotoImage(file="gui_maps/payload_map.png")
     # Binds image inside of label object. (Needed to use the grid layout)
@@ -167,6 +187,8 @@ def place_payload(mc_frame):
     mc_frame.payload_map_image.image = temp_image
     # Places image into GUI.
     mc_frame.payload_map_image.grid(row=16, column=0, rowspan=2, columnspan=3, sticky='nswe')
+    # Returns the updated 
+    return mc_frame
 
 
 def place_recovery(mc_frame):
@@ -176,7 +198,7 @@ def place_recovery(mc_frame):
     @param mc_frame - Reference object that holds the recovery_map_image object.
     """
 
-    # Removes old image from GUI. Prevents stacking which may lead to crashing.
+    # Removes old image from GUI. Prevents stacking which quickly increases memory utilization.
     mc_frame.recovery_map_image.grid_forget()
     # Pulls Static Maps image into python.
     temp_image = PhotoImage(file="gui_maps/recovery_map.png")
@@ -195,7 +217,7 @@ def place_network(mc_frame):
     @param mc_frame - Reference object that holds the network_map_image object.
     """
 
-    # Removes old image from GUI. Prevents stacking which may lead to crashing.
+    # Removes old image from GUI. Prevents stacking which quickly increases memory utilization.
     mc_frame.network_map_image.grid_forget()
     # Pulls Static Maps image into python.
     temp_image = PhotoImage(file="gui_maps/network_map.png")

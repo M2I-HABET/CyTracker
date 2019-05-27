@@ -80,7 +80,7 @@ class GUI_Terminal():
 		# north west corner of the GUI.
 		theme.configure('TNotebook', tabposition='wn')
 		# Spacing configuration for individual tabs.
-		theme.configure('TNotebook.Tab', padding=10)
+		theme.configure('TNotebook.Tab', padding=8)
 		# Sets the background color of each tab.
 		theme.configure('TNotebook', background='gray60')
 		# Sets the background color of each window.

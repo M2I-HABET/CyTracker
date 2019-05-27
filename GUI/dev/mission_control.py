@@ -162,6 +162,9 @@ class MC_Tab():
 
 		# Creates button widgets. (Triggers specified callback method.)
 		self.button_platform_launch = Button(self.mc_frame, text="Release\nBalloon", command=self.callback_release_balloon)
+		self.button_payload_zoom_in = Button(self.mc_frame, text="Zoom In", command=self.callback_payload_zoom_in)
+		self.button_payload_zoom_out = Button(self.mc_frame, text="Zoom Out", command=self.callback_payload_zoom_out)
+
 
 
 	def create_label_objects(self):
@@ -192,13 +195,13 @@ class MC_Tab():
 		"""
 
 		# Above divider one. (divider at bottom of method)
-		self.button_platform_launch.grid(row=3, column=1, sticky='nse')
-		self.label_release_status.grid(row=3, column=2, sticky='nswe')
-		self.create_label_east(0, 2, self.mc_frame, "Node Status:")
-		self.label_mission_control_node.grid(row=0, column=3, sticky='nswe')
-		self.label_payload_node.grid(row=1, column=3, sticky='nswe')
-		self.label_recovery_node.grid(row=0, column=4, sticky='nswe')
-		self.label_platform_node.grid(row=1, column=4, sticky='nswe')
+		self.button_platform_launch.grid(row=3, column=0, sticky='nse')
+		self.label_release_status.grid(row=3, column=1, sticky='nswe')
+		self.create_label_east(0, 0, self.mc_frame, "Node Status:")
+		self.label_mission_control_node.grid(row=0, column=1, sticky='nswe')
+		self.label_payload_node.grid(row=1, column=1, sticky='nswe')
+		self.label_recovery_node.grid(row=0, column=2, sticky='nswe')
+		self.label_platform_node.grid(row=1, column=2, sticky='nswe')
 		self.create_label_east(0, 5, self.mc_frame, "Received:")
 		self.entry_radio_received.grid(row=0, column=6, columnspan=13, sticky='we')
 		self.create_label_east(1, 5, self.mc_frame, "Sent:")
@@ -273,6 +276,8 @@ class MC_Tab():
 		self.payload_map_image.image = temp_image
 		# Places image into GUI.
 		self.payload_map_image.grid(row=16, column=0, rowspan=2, columnspan=3, sticky='nswe')
+		self.button_payload_zoom_in.grid(row=16, column=4, sticky="swe")
+		self.button_payload_zoom_out.grid(row=17, column=4, sticky="swe")
 		# Binds image inside of label object. (Needed to use the grid layout)
 		self.recovery_map_image = Label(self.mc_frame, image=temp_image)
 		# Reassigns the label object with the image attribute.
@@ -305,6 +310,173 @@ class MC_Tab():
 		self.layout_mission_maps()
 		# Update class instance stored as global.
 		g.mc_class_reference = self
+
+
+	def callback_payload_zoom_in(self, *args):
+		"""
+		Increases the zoom level of the payload map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Increase the zoom level.
+		maps.payload_zoom = str(int(maps.payload_zoom) + 1)
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_payload(maps.previous_payload_coords)
+		# Directory information and file name.
+		image_name = "gui_maps/payload_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		if self.payload_map_image is not None:
+			self.payload_map_image.destroy()
+		# Places the new image into the GUI.
+		self.mc_frame = maps.place_payload(self.mc_frame)
+
+
+	def callback_payload_zoom_out(self, *args):
+		"""
+		Decreases the zoom level of the payload map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Decreases the zoom level.
+		maps.payload_zoom = str(int(maps.payload_zoom) - 1)
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_payload(maps.previous_payload_coords)
+		# Directory information and file name.
+		image_name = "gui_maps/payload_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		if self.payload_map_image is not None:
+			self.payload_map_image.destroy()
+		# Places the new image into the GUI.
+		maps.place_payload(self.mc_frame)
+
+
+	def callback_payload_maptype(self, *args):
+		"""
+		Toggles the maptype of the requested image between "roadmap"
+		& "hybrid" (satellite view w/ roads).
+
+		@param self - Instace of the class.
+		"""
+	
+		if maps.payload_maptype is "roadmap":
+			maps.payload_maptype = "hybrid"
+		else:
+			maps.payload_maptype = "roadmap"
+
+
+	def callback_recovery_zoom_in(self, *args):
+		"""
+		Increases the zoom level of the recovery map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Increase the zoom level.
+		maps.recovery_zoom = str(int(maps.recovery_zoom) + 1)
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_recovery(maps.previous_recovery_coords)
+		# Directory information and file name.
+		image_name = "gui_maps/recovery_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		# Places the new image into the GUI.
+		maps.place_recovery(self.mc_frame)
+
+
+	def callback_recovery_zoom_out(self, *args):
+		"""
+		Decreases the zoom level of the recovery map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Decreases the zoom level.
+		maps.recovery_zoom = str(int(maps.recovery_zoom) - 1)
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_recovery(maps.previous_recovery_coords)
+		# Directory information and file name.
+		image_name = "gui_maps/recovery_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		# Places the new image into the GUI.
+		maps.place_recovery(self.mc_frame)
+
+
+	def callback_recovery_maptype(self, *args):
+		"""
+		Toggles the maptype of the requested image between "roadmap"
+		& "hybrid" (satellite view w/ roads).
+
+		@param self - Instace of the class.
+		"""
+	
+		if maps.recovery_maptype is "roadmap":
+			maps.recovery_maptype = "hybrid"
+		else:
+			maps.recovery_maptype = "roadmap"
+
+
+	def callback_network_zoom_in(self, *args):
+		"""
+		Increases the zoom level of the network map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Increase the zoom level.
+		maps.network_zoom += 1
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_network()
+		# Directory information and file name.
+		image_name = "gui_maps/network_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		# Places the new image into the GUI.
+		maps.place_network(self.mc_frame)
+
+
+	def callback_network_zoom_out(self, *args):
+		"""
+		Decreases the zoom level of the network map image. Also requests
+		& replaces the current map image.
+
+		@param self - Instace of the class.
+		"""
+
+		# Decreases the zoom level.
+		maps.network_zoom -= 1
+		# Constructs the url needed to get the right image from Static Maps.
+		url = maps.build_url_network()
+		# Directory information and file name.
+		image_name = "gui_maps/network_map" + "." + "PNG"
+		# Pulls down the configured Static Maps image from Google.
+		maps.request_API_image(url, image_name)
+		# Places the new image into the GUI.
+		maps.place_network(self.mc_frame)
+
+
+	def callback_network_maptype(self, *args):
+		"""
+		Toggles the maptype of the requested image between "roadmap"
+		& "hybrid" (satellite view w/ roads).
+
+		@param self - Instace of the class.
+		"""
+	
+		if maps.network_maptype is "roadmap":
+			maps.network_maptype = "hybrid"
+		else:
+			maps.network_maptype = "roadmap"
+
 
 	def callback_update_mission_control_node_status(self, *args):
 		"""
@@ -388,12 +560,11 @@ class MC_Tab():
 
 	def callback_update_release_status(self, *args):
 		"""
-		Upon serial data notification that the release status has been
-		updated, this method will change the color of the visual representation on
-		the gui to inform the user.
-		Green = Connected.
-		Yellow = Was, but lost.
-		Red = Not connected / lost.
+		Updates the visual indiciator to tell the user the status of the balloon launch system.
+		Prelaunch = User has yet to give the launch signal.
+		Standby = User has pressed the "release" button. Release signal is now propogating through
+		out the network.
+		Release Confirmed = Auto launch microcontroller has acknowledged release signal.
 		@param self - Instance of the class.
 		"""
 
