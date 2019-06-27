@@ -43,6 +43,9 @@ def generate_map(latitude, longitude, node):
     @param node - Payload or Recovery
     """
 
+    global previous_payload_coords
+    global previous_recovery_coords
+
     # Combines the given lat & lng.
     map_center = str(latitude) + "," + str(longitude)    
     
@@ -112,6 +115,15 @@ def build_url_payload(map_center):
     @param map_cetner - Center of the map (gps coordinates)
     """
 
+    global url_base
+    global zoom_base
+    global size_base
+    global payload_zoom
+    global maptype_base
+    global payload_maptype
+    global marker_base
+    global google_api_key
+
     # Builds the url to request a specific image.
     map_url = None
     map_url = url_base + map_center
@@ -131,6 +143,15 @@ def build_url_recovery(map_center):
     @param map_cetner - Center of the map (gps coordinates)
     """
 
+    global url_base
+    global zoom_base
+    global size_base
+    global recovery_zoom
+    global maptype_base
+    global recovery_maptype
+    global marker_base
+    global google_api_key
+
     # Builds the url to request a specific image.
     map_url = None
     map_url = url_base + map_center
@@ -148,6 +169,17 @@ def build_url_network():
     Builds the required url to request the desired image from Google.
     This image holds all nodes in the network.
     """
+
+    global url_base
+    global zoom_base
+    global size_base
+    global network_zoom
+    global maptype_base
+    global network_maptype
+    global marker_base
+    global google_api_key
+    global previous_recovery_coords
+    global previous_payload_coords
 
     # Seperates all latitude and longitude values from pairs into individual variables.
     p_lat, p_lng = previous_payload_coords.split(",")
