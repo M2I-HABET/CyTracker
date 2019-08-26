@@ -12,7 +12,7 @@ from tkinter import *
 from tkinter.ttk import *
 
 
-google_api_key = "&key=AIzaSyBPC7y0fIjsbz61P16wTudIrkfKK0Unzd4"
+google_api_key = "&key="
 url_base = "https://maps.googleapis.com/maps/api/staticmap?center="
 zoom_base = "&zoom="
 size_base = "&size="
